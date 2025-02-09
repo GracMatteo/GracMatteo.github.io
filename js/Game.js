@@ -5,7 +5,7 @@ import ObjetSouris from "./ObjetSouris.js";
 import { levels } from "./levels.js";
 import { rectsOverlap , circRectsOverlap} from "./collisions.js";
 import { initListeners } from "./ecouteurs.js";
-import Sortie from "./sortie.js";
+import Sortie from "./Sortie.js";
 
 export default class Game {
     objetsGraphiques = [];
