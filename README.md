@@ -18,7 +18,10 @@ Bienvenue dans **Speedrun Exit**
 ✅ **Obstacles fixes et animés** qui compliquent la progression.  
 ✅ **Timer** qui suit ton temps total de jeu.  
 
-
+## **Difficulter et bugs**
+- Decider de comment implementer differents niveau.
+- Bug de hitbox du player et obstaclesAnimés. (Le player a comme une hitbox invisible en plus en bas a gauche )
+- Bug Lors du relancement d'une partie. (Le player a la derniere directionpressé en boucle) 
 ---
 
 ## 🛠️ **Installation**
