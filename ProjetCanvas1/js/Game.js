@@ -144,6 +144,11 @@ export default class Game {
         } else {
             console.log("Tous les niveaux sont terminés !");
             alert("Félicitations ! Vous avez fini le jeu !");
+            
+            this.elapsedTime = 0; // Réinitialisation du temps
+            this.startTime = performance.now(); // Redémarrer le timer
+            this.timerRunning = true;
+            
             this.currentLevelIndex = 0; 
             this.loadLevel(this.currentLevelIndex);
         }
