@@ -1,4 +1,15 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Prend toute la hauteur de l'écran */
+    margin: 0;
+    background-color: #f0f0f0; /* Optionnel : couleur de fond */
+}
+
 #myCanvas {
     border: 1px solid black;
     background-color: lightgrey;
+   
+    
 }
