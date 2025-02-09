@@ -22,9 +22,17 @@ export default class Game {
 
     async init() {
         this.ctx = this.canvas.getContext("2d");
+        
+        //timer
+        this.currentLevel = 0;
+        this.elapsedTime = 0;  // Reset du temps
+        this.startTime = performance.now(); // Démarrer le timer
+        this.timerRunning = true;
+        
+        //level
         this.loadLevel(this.currentLevelIndex); // Charger le premier niveau
         initListeners(this.inputStates, this.canvas);
-        console.log("🎮 Game initialisé");
+        console.log("Game initialisé");
     }
     
     start() {
@@ -37,6 +45,12 @@ export default class Game {
     mainAnimationLoop() {
         // 1 - on efface le canvas
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        //timer
+        if (this.timerRunning) {
+            this.elapsedTime = (performance.now() - this.startTime) / 1000;
+            this.updateTimerDisplay();  // Maj du timer sur la page
+        }
 
         // 2 - on dessine les objets à animer dans le jeu
         // ici on dessine le monstre
@@ -85,7 +99,7 @@ export default class Game {
     
     loadLevel(levelIndex) {
         if (levelIndex >= levels.length) {
-            console.log("🏆 Bravo ! Tous les niveaux sont terminés !");
+            console.log("Bravo ! Tous les niveaux sont terminés !");
             alert("Félicitations ! Vous avez fini le jeu !");
             this.currentLevelIndex = 0;
             this.loadLevel(this.currentLevelIndex);
@@ -116,12 +130,12 @@ export default class Game {
             this.objetsGraphiques.push(obstacleAnime);
         });
     
-        console.log(`🔄 Chargement du niveau ${levelIndex + 1}`);
+        console.log(`Chargement du niveau ${levelIndex + 1}`);
     }
     
     
     nextLevel() {
-        console.log("🎉 Niveau terminé !");
+        console.log("Niveau terminé !");
     
         this.currentLevelIndex++; // Passer au niveau suivant
     
@@ -130,7 +144,7 @@ export default class Game {
         } else {
             console.log("Tous les niveaux sont terminés !");
             alert("Félicitations ! Vous avez fini le jeu !");
-            this.currentLevelIndex = 0; // Revenir au premier niveau
+            this.currentLevelIndex = 0; 
             this.loadLevel(this.currentLevelIndex);
         }
     }
@@ -239,4 +253,11 @@ export default class Game {
         });
     }
 
+    updateTimerDisplay() {
+        const timerSpan = document.querySelector("#timer span");
+        if (timerSpan) {
+            timerSpan.textContent = `${this.elapsedTime.toFixed(2)}s`;
+        }
+    }
+    
 }

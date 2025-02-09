@@ -13,3 +13,22 @@ body {
    
     
 }
+
+#timer {
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #333;
+    padding: 10px 20px;
+    border-radius: 8px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#timer span {
+    color: #ffcc00; /* Couleur dorée pour le temps */
+    font-weight: bold;
+}
