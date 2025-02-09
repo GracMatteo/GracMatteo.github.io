@@ -2,13 +2,15 @@ import Player from "./Player.js";
 import Obstacle from "./Obstacle.js";
 import ObstacleAnime from "./obstacleAnime.js";
 import ObjetSouris from "./ObjetSouris.js";
+import { levels } from "./levels.js";
 import { rectsOverlap , circRectsOverlap} from "./collisions.js";
 import { initListeners } from "./ecouteurs.js";
 import Sortie from "./sortie.js";
 
 export default class Game {
     objetsGraphiques = [];
-
+    currentLevelIndex = 0;
+    
     constructor(canvas) {
         this.canvas = canvas;
         // etat du clavier
@@ -18,47 +20,13 @@ export default class Game {
         };
     }
 
-    async init(canvas) {
+    async init() {
         this.ctx = this.canvas.getContext("2d");
-
-        this.player = new Player(50, 50);
-        this.objetsGraphiques.push(this.player);
-
-        // Un objert qui suite la souris
-        this.objetSouris = new ObjetSouris(200, 200, 25, 25, "orange");
-        this.objetsGraphiques.push(this.objetSouris);
-
-
-        // On cree des obstacles
-        let obstacle1 = new Obstacle(300, 0, 40, 600, "red");
-        this.objetsGraphiques.push(obstacle1);
-        let obstacle2 = new Obstacle(500, 500, 100, 100, "blue");
-        this.objetsGraphiques.push(obstacle2);
-
-        
-        let obstacleAnime = new ObstacleAnime(200, 300, 50, 50, "green");
-        obstacleAnime.vitesseY = 2; // Définit une vitesse initiale
-        this.objetsGraphiques.push(obstacleAnime);
-        
-        let obstacleAnime2 = new ObstacleAnime(500, 300, 50, 50, "green");
-        obstacleAnime2.vitesseY = -2; // Définit une vitesse initiale
-        this.objetsGraphiques.push(obstacleAnime2);
-        
-
-        let obstacleAnime3 = new ObstacleAnime(200, 500, 50, 50, "green");
-        obstacleAnime3.vitesseX = -2; // Définit une vitesse initiale
-        this.objetsGraphiques.push(obstacleAnime3);
-        
-        // On ajoute la sortie
-        this.sortie = new Sortie(700, 200, 15, "yellow");
-        this.objetsGraphiques.push(this.sortie);
-
-        // On initialise les écouteurs de touches, souris, etc.
+        this.loadLevel(this.currentLevelIndex); // Charger le premier niveau
         initListeners(this.inputStates, this.canvas);
-
-        console.log("Game initialisé");
+        console.log("🎮 Game initialisé");
     }
-
+    
     start() {
         console.log("Game démarré");
 
@@ -110,29 +78,66 @@ export default class Game {
             }
         });
         
-        //this.movePlayer();
+        
 
     }
 
-    // Charger le niveau suivant
-    nextLevel() {
-        console.log("Chargement du prochain niveau...");
     
-        // Ex. : Réinitialiser la position du joueur et charger un nouveau niveau
-        this.player.x = 100;
-        this.player.y = 100;
+    loadLevel(levelIndex) {
+        if (levelIndex >= levels.length) {
+            console.log("🏆 Bravo ! Tous les niveaux sont terminés !");
+            alert("Félicitations ! Vous avez fini le jeu !");
+            this.currentLevelIndex = 0;
+            this.loadLevel(this.currentLevelIndex);
+            return;
+        }
+    
+        this.objetsGraphiques = [];
+        let level = levels[levelIndex];
+    
+        this.player = new Player(level.playerStart.x, level.playerStart.y);
+        this.objetsGraphiques.push(this.player);
+        
+        this.objetSouris = new ObjetSouris(level.playerSouris.x, level.playerSouris.y,level.playerSouris.w,level.playerSouris.h, level.playerSouris.couleur);
+        this.objetsGraphiques.push(this.objetSouris);
 
-        // Générer un nouveau niveau (changer les obstacles, la sortie...)
-        this.objetsGraphiques = [this.player, this.objetSouris];
-
-        let obstacleNouveau = new Obstacle(400, 200, 50, 50, "purple");
-        this.objetsGraphiques.push(obstacleNouveau);
-
-        this.sortie = new Sortie(600, 300, 50, 50, "yellow");
+        this.sortie = new Sortie(level.sortie.x, level.sortie.y, level.sortie.r, level.sortie.couleur);
         this.objetsGraphiques.push(this.sortie);
-
-        console.log("Nouveau niveau chargé !");
+    
+        level.obstacles.forEach(obs => {
+            let obstacle = new Obstacle(obs.x, obs.y, obs.w, obs.h, obs.couleur);
+            this.objetsGraphiques.push(obstacle);
+        });
+    
+        level.obstaclesAnimes.forEach(obs => {
+            let obstacleAnime = new ObstacleAnime(obs.x, obs.y, obs.w, obs.h, obs.couleur);
+            obstacleAnime.vitesseX = obs.vitesseX;
+            obstacleAnime.vitesseY = obs.vitesseY;
+            this.objetsGraphiques.push(obstacleAnime);
+        });
+    
+        console.log(`🔄 Chargement du niveau ${levelIndex + 1}`);
     }
+    
+    
+    nextLevel() {
+        console.log("🎉 Niveau terminé !");
+    
+        this.currentLevelIndex++; // Passer au niveau suivant
+    
+        if (this.currentLevelIndex < levels.length) {
+            this.loadLevel(this.currentLevelIndex); // Charger le prochain niveau
+        } else {
+            console.log("Tous les niveaux sont terminés !");
+            alert("Félicitations ! Vous avez fini le jeu !");
+            this.currentLevelIndex = 0; // Revenir au premier niveau
+            this.loadLevel(this.currentLevelIndex);
+        }
+    }
+
+
+
+    
 
     movePlayer() {
         this.player.vitesseX = 0;
@@ -228,7 +233,7 @@ export default class Game {
                     obj.x, obj.y, obj.radius // Utilisation du rayon de la sortie
                 )) {
                     console.log(" Niveau terminé !");
-                    this.nextLevel(); // Change de niveau
+                    this.nextLevel(); 
                 }
             }
         });

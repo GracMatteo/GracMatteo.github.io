@@ -38,12 +38,12 @@ export default class Player extends ObjectGraphique {
         // Les dents
         let i = 0
         while(i < 5 ){
-            drawCircleImmediat(ctx,20 + i*15 + 1 , 80, 11 ,"black");
-            drawCircleImmediat(ctx,20 + i*15, 80, 10,"white");
+            drawCircleImmediat(ctx,10 + i*15 + 1 , 80, 11 ,"black");
+            drawCircleImmediat(ctx,10 + i*15, 80, 10,"white");
             i = i + 1
         } 
         
-        //this.drawBrasGauche();
+        
 
         // restore
         ctx.restore();
